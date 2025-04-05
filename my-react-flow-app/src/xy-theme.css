@@ -144,3 +144,101 @@ body {
     background: #f44336;
     box-shadow: 0 0 8px #f44336;
   }
+
+  /* Level Selection Styles */
+  .level-select {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-width: 800px;
+    width: 90%;
+  }
+
+  .level-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .level-button {
+    background: #f5f5f5;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .level-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .level-button.active {
+    border-color: #4CAF50;
+    background: #e8f5e9;
+  }
+
+  .level-button h3 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+  }
+
+  .level-button p {
+    margin: 0 0 1rem 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .level-difficulty {
+    color: #ff9800;
+    font-size: 0.9rem;
+  }
+
+  /* Add a semi-transparent overlay when level select is shown */
+  .level-select-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  .and-gate {
+    padding: 10px;
+    border: 2px solid #444;
+    border-radius: 5px;
+    background: white;
+    text-align: center;
+    min-width: 80px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  .and-gate .gate-content {
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+  }
+
+  .and-gate .react-flow__handle {
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border: 2px solid #666;
+    border-radius: 50%;
+  }
+
+  .and-gate .react-flow__handle:hover {
+    background: #f0f0f0;
+  }
