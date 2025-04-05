@@ -1,0 +1,146 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+  
+  #app {
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .color-selector-node {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #666;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .color-label {
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  
+  .color-input {
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  .react-flow__handle {
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border: 2px solid #666;
+  }
+  
+  .react-flow__handle.connectionindicator {
+    cursor: crosshair;
+  }
+  
+  .nodrag {
+    cursor: pointer;
+  }
+  
+  .input-node, .output-node, .inverter-node {
+    padding: 10px;
+    border: 2px solid #444;
+    border-radius: 5px;
+    background: white;
+    text-align: center;
+    min-width: 80px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .inverter-node {
+    background: #f0f0f0;
+  }
+  
+  .react-flow__handle {
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border: 2px solid #666;
+    border-radius: 50%;
+  }
+  
+  button {
+    margin: 5px;
+    padding: 8px 16px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background: #45a049;
+  }
+  
+  /* New styles for edges and animations */
+  .react-flow__edge-path {
+    stroke-width: 3;
+    transition: stroke 0.3s ease;
+  }
+  
+  .react-flow__edge.animated .react-flow__edge-path {
+    stroke-dasharray: 5;
+    animation: flowAnimation 1s linear infinite;
+  }
+  
+  .react-flow__edge.signal-high .react-flow__edge-path {
+    stroke: #4CAF50;
+    filter: drop-shadow(0 0 3px #4CAF50);
+  }
+  
+  .react-flow__edge.signal-low .react-flow__edge-path {
+    stroke: #f44336;
+    filter: drop-shadow(0 0 3px #f44336);
+  }
+  
+  @keyframes flowAnimation {
+    from {
+      stroke-dashoffset: 10;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  /* Enhanced node styles */
+  .input-node, .output-node {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .input-node {
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  }
+  
+  .inverter-node {
+    background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  /* Signal indicators */
+  .signal-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+    transition: all 0.3s ease;
+  }
+  
+  .signal-high .signal-indicator {
+    background: #4CAF50;
+    box-shadow: 0 0 8px #4CAF50;
+  }
+  
+  .signal-low .signal-indicator {
+    background: #f44336;
+    box-shadow: 0 0 8px #f44336;
+  }
