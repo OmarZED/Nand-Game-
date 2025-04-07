@@ -11,6 +11,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { InputNode, InverterNode, OutputNode, AndGate } from './components/gates';
 import { levels, getLevelById } from './levels';
+import { validateCircuit, getNextLevelId } from './levels';
 import LevelSelect from './components/ui/LevelSelect';
 
 const nodeTypes = {
@@ -126,54 +127,18 @@ const InverterGame = () => {
     });
   };
 
-  const checkSolution = () => {
-    const outputNode = nodes.find(n => n.id === 'output');
-    
-    if (outputNode.data.value === null) {
-      alert('Complete the circuit first!');
-      return;
-    }
+ 
+const checkSolution = () => {
+  const circuitState = { nodes, edges };
+  const result = validateCircuit(currentLevel, circuitState);
 
-    let isCorrect = false;
-    if (currentLevelId === 'level1') {
-      // NOT gate validation
-      const inputNode = nodes.find(n => n.id === 'input');
-      const hasInputToInverter = edges.some(e => e.source === 'input' && e.target === 'inverter');
-      const hasInverterToOutput = edges.some(e => e.source === 'inverter' && e.target === 'output');
-
-      isCorrect = hasInputToInverter && 
-                 hasInverterToOutput && 
-                 ((inputNode.data.value === 0 && outputNode.data.value === 1) || 
-                  (inputNode.data.value === 1 && outputNode.data.value === 0));
-    } else if (currentLevelId === 'level2') {
-      // AND gate validation
-      const input1Node = nodes.find(n => n.id === 'input1');
-      const input2Node = nodes.find(n => n.id === 'input2');
-      const hasInput1ToAnd = edges.some(e => e.source === 'input1' && e.target === 'and');
-      const hasInput2ToAnd = edges.some(e => e.source === 'input2' && e.target === 'and');
-      const hasAndToOutput = edges.some(e => e.source === 'and' && e.target === 'output');
-
-      // Check if all connections are made
-      const allConnectionsMade = hasInput1ToAnd && hasInput2ToAnd && hasAndToOutput;
-
-      // Check if the output matches the AND gate truth table
-      const correctOutput = (input1Node.data.value === 1 && input2Node.data.value === 1) ? 1 : 0;
-      const outputMatches = outputNode.data.value === correctOutput;
-
-      isCorrect = allConnectionsMade && outputMatches;
-    }
-
-    if (isCorrect) {
-      alert('Correct! You can now move to the next level!');
-      setShowLevelSelect(true);
-    } else {
-      if (currentLevelId === 'level1') {
-        alert('Try again! Make sure you have connected the input to the inverter and the inverter to the output.');
-      } else {
-        alert('Try again! Make sure you have connected both inputs to the AND gate and the AND gate to the output.');
-      }
-    }
-  };
+  if (result.success) {
+    alert(result.message);
+    setShowLevelSelect(true);
+  } else {
+    alert(result.message);
+  }
+};
 
   return (
     <div style={{ height: '100vh', width: '100vw' }}>
