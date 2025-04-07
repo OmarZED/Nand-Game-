@@ -1,10 +1,14 @@
 import { level1 } from './level1';
 import { level2 } from './level2';
 import { level3 } from './level3';
+import { level4 } from './level4';
+import { level5 } from './level5';
+import { level6 } from './level6';
+import { level7 } from './level7';
 export { GATE_TYPES } from './types';
 
 // Array of all available levels
-export const levels = [level1, level2, level3];
+export const levels = [level1, level2, level3, level4, level5, level6, level7];
 
 /**
  * Get a level configuration by ID
@@ -29,6 +33,14 @@ export const validateCircuit = (level, circuitState) => {
       return validateLevel2(circuitState);
     case 'level3':
       return validateLevel3(circuitState);
+    case 'level4':
+      return validateLevel4(circuitState);
+    case 'level5':
+      return validateLevel5(circuitState);
+    case 'level6':
+      return validateLevel6(circuitState);
+    case 'level7':
+      return validateLevel7(circuitState);
     default:
       return {
         success: false,
@@ -241,6 +253,258 @@ const validateLevel3 = (circuitState) => {
   return {
     success: true,
     message: "Congratulations! You've successfully completed the OR gate challenge!"
+  };
+};
+
+/**
+ * Validation logic for Level 4 (NAND gate)
+ */
+const validateLevel4 = (circuitState) => {
+  const { nodes, edges } = circuitState;
+  const input1Node = nodes.find(n => n.id === 'input1');
+  const input2Node = nodes.find(n => n.id === 'input2');
+  const outputNode = nodes.find(n => n.id === 'output');
+  const nandNode = nodes.find(n => n.id === 'nand');
+
+  if (!input1Node || !input2Node || !outputNode || !nandNode) {
+    return {
+      success: false,
+      message: "Missing required components. Make sure you have both inputs, NAND gate, and output nodes."
+    };
+  }
+
+  // Check if inputs are connected to the NAND gate
+  const input1ToNand = edges.some(e => e.source === 'input1' && e.target === 'nand');
+  const input2ToNand = edges.some(e => e.source === 'input2' && e.target === 'nand');
+  const nandToOutput = edges.some(e => e.source === 'nand' && e.target === 'output');
+
+  if (!input1ToNand || !input2ToNand || !nandToOutput) {
+    return {
+      success: false,
+      message: "Incorrect connections. Connect both inputs to the NAND gate, and the NAND gate to the output."
+    };
+  }
+
+  // Check all truth table combinations
+  const truthTable = level4.expectedTruthTable;
+  let allCorrect = true;
+  let incorrectCombination = null;
+
+  for (const combination of truthTable) {
+    // Set input values
+    const input1Value = combination.input1;
+    const input2Value = combination.input2;
+    const expectedOutput = combination.output;
+
+    // Calculate NAND gate output (inverse of AND)
+    const actualOutput = (input1Value === 1 && input2Value === 1) ? 0 : 1;
+
+    if (actualOutput !== expectedOutput) {
+      allCorrect = false;
+      incorrectCombination = combination;
+      break;
+    }
+  }
+
+  if (!allCorrect) {
+    return {
+      success: false,
+      message: `Incorrect output for input combination: Input1=${incorrectCombination.input1}, Input2=${incorrectCombination.input2}. Expected output: ${incorrectCombination.output}`
+    };
+  }
+
+  return {
+    success: true,
+    message: "Congratulations! You've successfully completed the NAND gate challenge!"
+  };
+};
+
+/**
+ * Validation logic for Level 5 (NOR gate)
+ */
+const validateLevel5 = (circuitState) => {
+  const { nodes, edges } = circuitState;
+  const input1Node = nodes.find(n => n.id === 'input1');
+  const input2Node = nodes.find(n => n.id === 'input2');
+  const outputNode = nodes.find(n => n.id === 'output');
+  const norNode = nodes.find(n => n.id === 'nor');
+
+  if (!input1Node || !input2Node || !outputNode || !norNode) {
+    return {
+      success: false,
+      message: "Missing required components. Make sure you have both inputs, NOR gate, and output nodes."
+    };
+  }
+
+  // Check if inputs are connected to the NOR gate
+  const input1ToNor = edges.some(e => e.source === 'input1' && e.target === 'nor');
+  const input2ToNor = edges.some(e => e.source === 'input2' && e.target === 'nor');
+  const norToOutput = edges.some(e => e.source === 'nor' && e.target === 'output');
+
+  if (!input1ToNor || !input2ToNor || !norToOutput) {
+    return {
+      success: false,
+      message: "Incorrect connections. Connect both inputs to the NOR gate, and the NOR gate to the output."
+    };
+  }
+
+  // Check all truth table combinations
+  const truthTable = level5.expectedTruthTable;
+  let allCorrect = true;
+  let incorrectCombination = null;
+
+  for (const combination of truthTable) {
+    // Set input values
+    const input1Value = combination.input1;
+    const input2Value = combination.input2;
+    const expectedOutput = combination.output;
+
+    // Calculate NOR gate output (inverse of OR)
+    const actualOutput = (input1Value === 0 && input2Value === 0) ? 1 : 0;
+
+    if (actualOutput !== expectedOutput) {
+      allCorrect = false;
+      incorrectCombination = combination;
+      break;
+    }
+  }
+
+  if (!allCorrect) {
+    return {
+      success: false,
+      message: `Incorrect output for input combination: Input1=${incorrectCombination.input1}, Input2=${incorrectCombination.input2}. Expected output: ${incorrectCombination.output}`
+    };
+  }
+
+  return {
+    success: true,
+    message: "Congratulations! You've successfully completed the NOR gate challenge!"
+  };
+};
+
+/**
+ * Validation logic for Level 6 (XOR gate)
+ */
+const validateLevel6 = (circuitState) => {
+  const { nodes, edges } = circuitState;
+  const input1Node = nodes.find(n => n.id === 'input1');
+  const input2Node = nodes.find(n => n.id === 'input2');
+  const outputNode = nodes.find(n => n.id === 'output');
+  const xorNode = nodes.find(n => n.id === 'xor');
+
+  if (!input1Node || !input2Node || !outputNode || !xorNode) {
+    return {
+      success: false,
+      message: "Missing required components. Make sure you have both inputs, XOR gate, and output nodes."
+    };
+  }
+
+  // Check if inputs are connected to the XOR gate
+  const input1ToXor = edges.some(e => e.source === 'input1' && e.target === 'xor');
+  const input2ToXor = edges.some(e => e.source === 'input2' && e.target === 'xor');
+  const xorToOutput = edges.some(e => e.source === 'xor' && e.target === 'output');
+
+  if (!input1ToXor || !input2ToXor || !xorToOutput) {
+    return {
+      success: false,
+      message: "Incorrect connections. Connect both inputs to the XOR gate, and the XOR gate to the output."
+    };
+  }
+
+  // Check all truth table combinations
+  const truthTable = level6.expectedTruthTable;
+  let allCorrect = true;
+  let incorrectCombination = null;
+
+  for (const combination of truthTable) {
+    // Set input values
+    const input1Value = combination.input1;
+    const input2Value = combination.input2;
+    const expectedOutput = combination.output;
+
+    // Calculate XOR gate output (1 when inputs are different, 0 when they are the same)
+    const actualOutput = input1Value !== input2Value ? 1 : 0;
+
+    if (actualOutput !== expectedOutput) {
+      allCorrect = false;
+      incorrectCombination = combination;
+      break;
+    }
+  }
+
+  if (!allCorrect) {
+    return {
+      success: false,
+      message: `Incorrect output for input combination: Input1=${incorrectCombination.input1}, Input2=${incorrectCombination.input2}. Expected output: ${incorrectCombination.output}`
+    };
+  }
+
+  return {
+    success: true,
+    message: "Congratulations! You've successfully completed the XOR gate challenge!"
+  };
+};
+
+/**
+ * Validation logic for Level 7 (XNOR gate)
+ */
+const validateLevel7 = (circuitState) => {
+  const { nodes, edges } = circuitState;
+  const input1Node = nodes.find(n => n.id === 'input1');
+  const input2Node = nodes.find(n => n.id === 'input2');
+  const outputNode = nodes.find(n => n.id === 'output');
+  const xnorNode = nodes.find(n => n.id === 'xnor');
+
+  if (!input1Node || !input2Node || !outputNode || !xnorNode) {
+    return {
+      success: false,
+      message: "Missing required components. Make sure you have both inputs, XNOR gate, and output nodes."
+    };
+  }
+
+  // Check if inputs are connected to the XNOR gate
+  const input1ToXnor = edges.some(e => e.source === 'input1' && e.target === 'xnor');
+  const input2ToXnor = edges.some(e => e.source === 'input2' && e.target === 'xnor');
+  const xnorToOutput = edges.some(e => e.source === 'xnor' && e.target === 'output');
+
+  if (!input1ToXnor || !input2ToXnor || !xnorToOutput) {
+    return {
+      success: false,
+      message: "Incorrect connections. Connect both inputs to the XNOR gate, and the XNOR gate to the output."
+    };
+  }
+
+  // Check all truth table combinations
+  const truthTable = level7.expectedTruthTable;
+  let allCorrect = true;
+  let incorrectCombination = null;
+
+  for (const combination of truthTable) {
+    // Set input values
+    const input1Value = combination.input1;
+    const input2Value = combination.input2;
+    const expectedOutput = combination.output;
+
+    // Calculate XNOR gate output (1 when inputs are the same, 0 when they are different)
+    const actualOutput = input1Value === input2Value ? 1 : 0;
+
+    if (actualOutput !== expectedOutput) {
+      allCorrect = false;
+      incorrectCombination = combination;
+      break;
+    }
+  }
+
+  if (!allCorrect) {
+    return {
+      success: false,
+      message: `Incorrect output for input combination: Input1=${incorrectCombination.input1}, Input2=${incorrectCombination.input2}. Expected output: ${incorrectCombination.output}`
+    };
+  }
+
+  return {
+    success: true,
+    message: "Congratulations! You've successfully completed the XNOR gate challenge!"
   };
 };
 

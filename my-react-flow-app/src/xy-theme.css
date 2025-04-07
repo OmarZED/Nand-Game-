@@ -268,3 +268,115 @@ body {
   .or-gate .react-flow__handle:hover {
     background: #ddd;
   }
+
+  .nand-gate {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border: 2px solid #444;
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nand-gate .gate-content {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .nand-gate .react-flow__handle {
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border: 2px solid #666;
+  }
+
+  .nand-gate .react-flow__handle:hover {
+    background: #ddd;
+  }
+
+  .nor-gate {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border: 2px solid #444;
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nor-gate .gate-content {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .nor-gate .react-flow__handle {
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border: 2px solid #666;
+  }
+
+  .nor-gate .react-flow__handle:hover {
+    background: #ddd;
+  }
+
+  .xor-gate {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border: 2px solid #444;
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .xor-gate .gate-content {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .xor-gate .react-flow__handle {
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border: 2px solid #666;
+  }
+
+  .xor-gate .react-flow__handle:hover {
+    background: #ddd;
+  }
+
+  .xnor-gate {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border: 2px solid #444;
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .xnor-gate .gate-content {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .xnor-gate .react-flow__handle {
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border: 2px solid #666;
+  }
+
+  .xnor-gate .react-flow__handle:hover {
+    background: #ddd;
+  }

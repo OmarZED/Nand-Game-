@@ -110,6 +110,98 @@ export const useGameLogic = () => {
           })
         );
       }
+    } else if (currentLevelId === 'level4') {
+      const hasInput1ToNand = edges.some(e => e.source === 'input1' && e.target === 'nand');
+      const hasInput2ToNand = edges.some(e => e.source === 'input2' && e.target === 'nand');
+      const hasNandToOutput = edges.some(e => e.source === 'nand' && e.target === 'output');
+
+      if (hasInput1ToNand && hasInput2ToNand && hasNandToOutput) {
+        const input1Value = inputValues['input1'] || 0;
+        const input2Value = inputValues['input2'] || 0;
+        // NAND gate output is the inverse of AND gate
+        const nandOutput = (input1Value === 1 && input2Value === 1) ? 0 : 1;
+
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === 'output') {
+              return {
+                ...node,
+                data: { value: nandOutput }
+              };
+            }
+            return node;
+          })
+        );
+      }
+    } else if (currentLevelId === 'level5') {
+      const hasInput1ToNor = edges.some(e => e.source === 'input1' && e.target === 'nor');
+      const hasInput2ToNor = edges.some(e => e.source === 'input2' && e.target === 'nor');
+      const hasNorToOutput = edges.some(e => e.source === 'nor' && e.target === 'output');
+
+      if (hasInput1ToNor && hasInput2ToNor && hasNorToOutput) {
+        const input1Value = inputValues['input1'] || 0;
+        const input2Value = inputValues['input2'] || 0;
+        // NOR gate output is 1 only when both inputs are 0
+        const norOutput = (input1Value === 0 && input2Value === 0) ? 1 : 0;
+
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === 'output') {
+              return {
+                ...node,
+                data: { value: norOutput }
+              };
+            }
+            return node;
+          })
+        );
+      }
+    } else if (currentLevelId === 'level6') {
+      const hasInput1ToXor = edges.some(e => e.source === 'input1' && e.target === 'xor');
+      const hasInput2ToXor = edges.some(e => e.source === 'input2' && e.target === 'xor');
+      const hasXorToOutput = edges.some(e => e.source === 'xor' && e.target === 'output');
+
+      if (hasInput1ToXor && hasInput2ToXor && hasXorToOutput) {
+        const input1Value = inputValues['input1'] || 0;
+        const input2Value = inputValues['input2'] || 0;
+        // XOR gate output is 1 when inputs are different, 0 when they are the same
+        const xorOutput = input1Value !== input2Value ? 1 : 0;
+
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === 'output') {
+              return {
+                ...node,
+                data: { value: xorOutput }
+              };
+            }
+            return node;
+          })
+        );
+      }
+    } else if (currentLevelId === 'level7') {
+      const hasInput1ToXnor = edges.some(e => e.source === 'input1' && e.target === 'xnor');
+      const hasInput2ToXnor = edges.some(e => e.source === 'input2' && e.target === 'xnor');
+      const hasXnorToOutput = edges.some(e => e.source === 'xnor' && e.target === 'output');
+
+      if (hasInput1ToXnor && hasInput2ToXnor && hasXnorToOutput) {
+        const input1Value = inputValues['input1'] || 0;
+        const input2Value = inputValues['input2'] || 0;
+        // XNOR gate output is 1 when inputs are the same, 0 when they are different
+        const xnorOutput = input1Value === input2Value ? 1 : 0;
+
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === 'output') {
+              return {
+                ...node,
+                data: { value: xnorOutput }
+              };
+            }
+            return node;
+          })
+        );
+      }
     }
   }, [currentLevelId, edges, inputValues, setNodes]);
 

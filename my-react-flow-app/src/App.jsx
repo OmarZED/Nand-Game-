@@ -1,6 +1,6 @@
 import { ReactFlow, Controls, Background } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { InputNode, InverterNode, OutputNode, AndGate, OrGate } from './components/gates';
+import { InputNode, InverterNode, OutputNode, AndGate, OrGate, NandGate, NorGate, XorGate, XnorGate } from './components/gates';
 import { levels } from './levels';
 import LevelSelect from './components/ui/LevelSelect';
 import { useGameLogic } from './hooks/useGameLogic';
@@ -10,7 +10,11 @@ const nodeTypes = {
   inverter: InverterNode,
   output: OutputNode,
   and: AndGate,
-  or: OrGate
+  or: OrGate,
+  nand: NandGate,
+  nor: NorGate,
+  xor: XorGate,
+  xnor: XnorGate
 };
 
 /**
