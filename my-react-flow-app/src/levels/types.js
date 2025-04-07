@@ -25,5 +25,6 @@ export const GATE_TYPES = {
   OR: 'or',
   NAND: 'nand',
   NOR: 'nor',
-  XOR: 'xor'
+  XOR: 'xor',
+  XNOR: 'xnor'
 }; 
