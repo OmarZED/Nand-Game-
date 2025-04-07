@@ -1,9 +1,10 @@
 import { level1 } from './level1';
 import { level2 } from './level2';
+import { level3 } from './level3';
 export { GATE_TYPES } from './types';
 
 // Array of all available levels
-export const levels = [level1, level2];
+export const levels = [level1, level2, level3];
 
 /**
  * Get a level configuration by ID
@@ -26,6 +27,8 @@ export const validateCircuit = (level, circuitState) => {
       return validateLevel1(circuitState);
     case 'level2':
       return validateLevel2(circuitState);
+    case 'level3':
+      return validateLevel3(circuitState);
     default:
       return {
         success: false,
@@ -179,11 +182,77 @@ const validateLevel2 = (circuitState) => {
 };
 
 /**
- * Get the next level ID after the current one
- * @param {string} currentLevelId - Current level ID
- * @returns {string|undefined} Next level ID or undefined if current is last
+ * Validation logic for Level 3 (OR gate)
+ */
+const validateLevel3 = (circuitState) => {
+  const { nodes, edges } = circuitState;
+  const input1Node = nodes.find(n => n.id === 'input1');
+  const input2Node = nodes.find(n => n.id === 'input2');
+  const outputNode = nodes.find(n => n.id === 'output');
+  const orNode = nodes.find(n => n.id === 'or');
+
+  if (!input1Node || !input2Node || !outputNode || !orNode) {
+    return {
+      success: false,
+      message: "Missing required components. Make sure you have both inputs, OR gate, and output nodes."
+    };
+  }
+
+  // Check if inputs are connected to the OR gate
+  const input1ToOr = edges.some(e => e.source === 'input1' && e.target === 'or');
+  const input2ToOr = edges.some(e => e.source === 'input2' && e.target === 'or');
+  const orToOutput = edges.some(e => e.source === 'or' && e.target === 'output');
+
+  if (!input1ToOr || !input2ToOr || !orToOutput) {
+    return {
+      success: false,
+      message: "Incorrect connections. Connect both inputs to the OR gate, and the OR gate to the output."
+    };
+  }
+
+  // Check all truth table combinations
+  const truthTable = level3.expectedTruthTable;
+  let allCorrect = true;
+  let incorrectCombination = null;
+
+  for (const combination of truthTable) {
+    // Set input values
+    const input1Value = combination.input1;
+    const input2Value = combination.input2;
+    const expectedOutput = combination.output;
+
+    // Calculate OR gate output
+    const actualOutput = input1Value === 1 || input2Value === 1 ? 1 : 0;
+
+    if (actualOutput !== expectedOutput) {
+      allCorrect = false;
+      incorrectCombination = combination;
+      break;
+    }
+  }
+
+  if (!allCorrect) {
+    return {
+      success: false,
+      message: `Incorrect output for input combination: Input1=${incorrectCombination.input1}, Input2=${incorrectCombination.input2}. Expected output: ${incorrectCombination.output}`
+    };
+  }
+
+  return {
+    success: true,
+    message: "Congratulations! You've successfully completed the OR gate challenge!"
+  };
+};
+
+/**
+ * Get the next level ID based on the current level
+ * @param {string} currentLevelId - The current level ID
+ * @returns {string|null} The next level ID or null if there is no next level
  */
 export const getNextLevelId = (currentLevelId) => {
   const currentIndex = levels.findIndex(level => level.id === currentLevelId);
-  return currentIndex < levels.length - 1 ? levels[currentIndex + 1].id : undefined;
+  if (currentIndex === -1 || currentIndex === levels.length - 1) {
+    return null;
+  }
+  return levels[currentIndex + 1].id;
 };
