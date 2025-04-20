@@ -5,10 +5,11 @@ import { level4 } from './level4';
 import { level5 } from './level5';
 import { level6 } from './level6';
 import { level7 } from './level7';
+import { level8 } from './level8';
 export { GATE_TYPES } from './types';
 
 // Array of all available levels
-export const levels = [level1, level2, level3, level4, level5, level6, level7];
+export const levels = [level1, level2, level3, level4, level5, level6, level7, level8];
 
 /**
  * Get a level configuration by ID
@@ -41,6 +42,8 @@ export const validateCircuit = (level, circuitState) => {
       return validateLevel6(circuitState);
     case 'level7':
       return validateLevel7(circuitState);
+    case 'level8':
+      return validateLevel8(circuitState);
     default:
       return {
         success: false,
@@ -505,6 +508,86 @@ const validateLevel7 = (circuitState) => {
   return {
     success: true,
     message: "Congratulations! You've successfully completed the XNOR gate challenge!"
+  };
+};
+
+/**
+ * Validation logic for Level 8 (Complex Gate Combination)
+ */
+const validateLevel8 = (circuitState) => {
+  const { nodes, edges } = circuitState;
+
+  // Check for required nodes
+  const input1 = nodes.find(n => n.id === 'input1');
+  const input2 = nodes.find(n => n.id === 'input2');
+  const output = nodes.find(n => n.id === 'output');
+  const nand1 = nodes.find(n => n.id === 'nand1');
+  const and1 = nodes.find(n => n.id === 'and1');
+  const nand2 = nodes.find(n => n.id === 'nand2');
+  const or1 = nodes.find(n => n.id === 'or1');
+
+  if (!input1 || !input2 || !output || !nand1 || !and1 || !nand2 || !or1) {
+    return {
+      success: false,
+      message: "Missing required components. Make sure all gates are placed correctly."
+    };
+  }
+
+  // Check connections
+  const requiredConnections = [
+    { from: 'input1', to: 'nand1' },
+    { from: 'input1', to: 'nand2' },
+    { from: 'input2', to: 'nand1' },
+    { from: 'input2', to: 'nand2' },
+    { from: 'nand1', to: 'and1' },
+    { from: 'nand2', to: 'or1' },
+    { from: 'and1', to: 'or1' },
+    { from: 'or1', to: 'output' }
+  ];
+
+  for (const conn of requiredConnections) {
+    const hasConnection = edges.some(e => 
+      e.source === conn.from && e.target === conn.to
+    );
+    if (!hasConnection) {
+      return {
+        success: false,
+        message: `Missing connection from ${conn.from} to ${conn.to}.`
+      };
+    }
+  }
+
+  // Check truth table
+  const truthTable = [
+    { input1: 0, input2: 0, output: 1 },
+    { input1: 0, input2: 1, output: 0 },
+    { input1: 1, input2: 0, output: 0 },
+    { input1: 1, input2: 1, output: 1 }
+  ];
+
+  for (const testCase of truthTable) {
+    // Set input values
+    input1.data.value = testCase.input1;
+    input2.data.value = testCase.input2;
+
+    // Calculate expected output
+    const nand1Output = !(testCase.input1 && testCase.input2) ? 1 : 0;
+    const nand2Output = !(testCase.input1 && testCase.input2) ? 1 : 0;
+    const and1Output = nand1Output && testCase.input2 ? 1 : 0;
+    const or1Output = and1Output || nand2Output ? 1 : 0;
+    const expectedOutput = or1Output;
+
+    if (output.data.value !== expectedOutput) {
+      return {
+        success: false,
+        message: `Incorrect output for inputs (${testCase.input1}, ${testCase.input2}). Expected ${expectedOutput}, got ${output.data.value}.`
+      };
+    }
+  }
+
+  return {
+    success: true,
+    message: "Excellent! You've successfully implemented the complex logic circuit!"
   };
 };
 

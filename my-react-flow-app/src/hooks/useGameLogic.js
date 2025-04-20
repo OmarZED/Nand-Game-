@@ -202,6 +202,45 @@ export const useGameLogic = () => {
           })
         );
       }
+    } else if (currentLevelId === 'level8') {
+      // Check all required connections
+      const hasInput1ToNand1 = edges.some(e => e.source === 'input1' && e.target === 'nand1');
+      const hasInput1ToNand2 = edges.some(e => e.source === 'input1' && e.target === 'nand2');
+      const hasInput2ToNand1 = edges.some(e => e.source === 'input2' && e.target === 'nand1');
+      const hasInput2ToNand2 = edges.some(e => e.source === 'input2' && e.target === 'nand2');
+      const hasNand1ToAnd1 = edges.some(e => e.source === 'nand1' && e.target === 'and1');
+      const hasNand2ToOr1 = edges.some(e => e.source === 'nand2' && e.target === 'or1');
+      const hasAnd1ToOr1 = edges.some(e => e.source === 'and1' && e.target === 'or1');
+      const hasOr1ToOutput = edges.some(e => e.source === 'or1' && e.target === 'output');
+
+      if (hasInput1ToNand1 && hasInput1ToNand2 && hasInput2ToNand1 && 
+          hasInput2ToNand2 && hasNand1ToAnd1 && hasNand2ToOr1 && 
+          hasAnd1ToOr1 && hasOr1ToOutput) {
+        const input1Value = inputValues['input1'] || 0;
+        const input2Value = inputValues['input2'] || 0;
+
+        // Calculate NAND gate outputs
+        const nand1Output = !(input1Value && input2Value) ? 1 : 0;
+        const nand2Output = !(input1Value && input2Value) ? 1 : 0;
+
+        // Calculate AND gate output
+        const and1Output = nand1Output && input2Value ? 1 : 0;
+
+        // Calculate OR gate output
+        const or1Output = and1Output || nand2Output ? 1 : 0;
+
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === 'output') {
+              return {
+                ...node,
+                data: { value: or1Output }
+              };
+            }
+            return node;
+          })
+        );
+      }
     }
   }, [currentLevelId, edges, inputValues, setNodes]);
 

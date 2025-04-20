@@ -4,7 +4,7 @@ export const level7 = {
   id: 'level7',
   title: 'XNOR Gate Challenge',
   description: 'Build an XNOR gate circuit. An XNOR gate outputs 1 only when the inputs are the same, and 0 when they are different.',
-  difficulty: 3,
+  difficulty: 2,
   availableGates: [GATE_TYPES.XNOR],
   initialNodes: [
     {
