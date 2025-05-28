@@ -1,7 +1,7 @@
 import React from 'react';
 import LevelSelect from './LevelSelect';
 
-const LevelSelectOverlay = ({ showLevelSelect, setShowLevelSelect, levels, currentLevelId, onSelectLevel }) => {
+const LevelSelectOverlay = ({ showLevelSelect, setShowLevelSelect, levels, currentLevelId, onSelectLevel, completedLevels }) => {
   if (!showLevelSelect) return null;
 
   return (
@@ -23,6 +23,7 @@ const LevelSelectOverlay = ({ showLevelSelect, setShowLevelSelect, levels, curre
         levels={levels}
         currentLevelId={currentLevelId}
         onSelectLevel={onSelectLevel}
+        completedLevels={completedLevels}
         style={{ zIndex: 20 }}
       />
     </>

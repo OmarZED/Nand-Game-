@@ -27,6 +27,7 @@ import { levels } from './levels';
 // Context
 import { DnDProvider } from './contexts/DnDContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthGuard } from './components/AuthGuard';
 
 // Define node types for React Flow
 const nodeTypes = {
@@ -57,12 +58,31 @@ const InverterGame = () => {
     checkSolution,
   } = useGameLogic();
 
+  const { updateProgress, userProgress } = useAuth();
   const [feedback, setFeedback] = useState(null);
 
   // Handle check button
-  const handleCheck = () => {
+  const handleCheck = async () => {
     const result = checkSolution();
     setFeedback(result);
+    
+    if (result.success) {
+      // Update progress when level is completed
+      const completedLevels = [...(userProgress?.completedLevels || [])];
+      if (!completedLevels.includes(currentLevelId)) {
+        completedLevels.push(currentLevelId);
+      }
+      
+      // Find next level
+      const currentIndex = levels.findIndex(level => level.id === currentLevelId);
+      const nextLevel = levels[currentIndex + 1];
+      
+      await updateProgress({
+        completedLevels,
+        currentLevel: nextLevel ? nextLevel.id : currentLevelId
+      });
+    }
+    
     setTimeout(() => setFeedback(null), 4000);
   };
 
@@ -105,6 +125,7 @@ const InverterGame = () => {
       <LevelSidebar
         title={currentLevel.title}
         description={currentLevel.description}
+        completedLevels={userProgress?.completedLevels || []}
       />
 
       {/* Main Content */}
@@ -143,6 +164,7 @@ const InverterGame = () => {
           levels={levels}
           currentLevelId={currentLevelId}
           onSelectLevel={handleLevelSelect}
+          completedLevels={userProgress?.completedLevels || []}
         />
       </div>
     </div>
@@ -189,7 +211,9 @@ export default function App() {
   return (
     <AuthProvider>
       <DnDProvider>
-        <AppContent />
+        <AuthGuard>
+          <InverterGame />
+        </AuthGuard>
       </DnDProvider>
     </AuthProvider>
   );
