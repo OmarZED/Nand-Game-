@@ -15,7 +15,10 @@ import XnorGate from './components/gates/XnorGate';
 
 // Sidebar and Level Components
 import LevelSidebar from './components/LevelSidebar';
-import LevelSelect from './components/ui/LevelSelect';
+import LevelSelectOverlay from './components/ui/LevelSelectOverlay';
+import GameControls from './components/GameControls';
+import FeedbackMessage from './components/FeedbackMessage';
+import LoginForm from './components/auth/LoginForm';
 
 // Hooks and Data
 import { useGameLogic } from './hooks/useGameLogic';
@@ -23,6 +26,7 @@ import { levels } from './levels';
 
 // Context
 import { DnDProvider } from './contexts/DnDContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // Define node types for React Flow
 const nodeTypes = {
@@ -106,26 +110,12 @@ const InverterGame = () => {
       {/* Main Content */}
       <div style={{ flex: 1, position: 'relative' }}>
         {/* Game Controls */}
-        <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 10 }}>
-          {currentLevelId === 'level1' ? (
-            <button onClick={() => toggleInput('input')} style={{ marginRight: '10px' }}>
-              Toggle Input
-            </button>
-          ) : (
-            <>
-              <button onClick={() => toggleInput('input1')} style={{ marginRight: '10px' }}>
-                Toggle Input 1
-              </button>
-              <button onClick={() => toggleInput('input2')} style={{ marginRight: '10px' }}>
-                Toggle Input 2
-              </button>
-            </>
-          )}
-          <button onClick={handleCheck} style={{ marginRight: '10px' }}>
-            Check Solution
-          </button>
-          <button onClick={() => setShowLevelSelect(true)}>Select Level</button>
-        </div>
+        <GameControls
+          currentLevelId={currentLevelId}
+          toggleInput={toggleInput}
+          handleCheck={handleCheck}
+          setShowLevelSelect={setShowLevelSelect}
+        />
 
         {/* Canvas */}
         <ReactFlow
@@ -144,58 +134,63 @@ const InverterGame = () => {
         </ReactFlow>
 
         {/* Feedback */}
-        {feedback && (
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              left: '20px',
-              backgroundColor: feedback.success ? '#d0f8ce' : '#ffcccb',
-              padding: '1rem',
-              borderRadius: '6px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-              zIndex: 20,
-              maxWidth: '300px',
-            }}
-          >
-            {feedback.message}
-          </div>
-        )}
+        <FeedbackMessage feedback={feedback} />
 
         {/* Level Selector Overlay */}
-        {showLevelSelect && (
-          <>
-            <div
-              className="level-select-overlay"
-              onClick={() => setShowLevelSelect(false)}
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                background: 'rgba(0,0,0,0.5)',
-                zIndex: 10,
-              }}
-            />
-            <LevelSelect
-              levels={levels}
-              currentLevelId={currentLevelId}
-              onSelectLevel={handleLevelSelect}
-              style={{ zIndex: 20 }}
-            />
-          </>
-        )}
+        <LevelSelectOverlay
+          showLevelSelect={showLevelSelect}
+          setShowLevelSelect={setShowLevelSelect}
+          levels={levels}
+          currentLevelId={currentLevelId}
+          onSelectLevel={handleLevelSelect}
+        />
       </div>
     </div>
   );
 };
 
-// Wrap everything in DnDProvider
+const AppContent = () => {
+  const { user, loading, error } = useAuth();
+
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '1.2rem'
+      }}>
+        Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        color: 'red',
+        fontSize: '1.2rem'
+      }}>
+        Error: {error.message}
+      </div>
+    );
+  }
+
+  return user ? <InverterGame /> : <LoginForm />;
+};
+
+// Wrap everything in DnDProvider and AuthProvider
 export default function App() {
   return (
-    <DnDProvider>
-      <InverterGame />
-    </DnDProvider>
+    <AuthProvider>
+      <DnDProvider>
+        <AppContent />
+      </DnDProvider>
+    </AuthProvider>
   );
 }
