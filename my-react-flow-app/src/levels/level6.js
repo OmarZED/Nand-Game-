@@ -20,12 +20,6 @@ export const level6 = {
       data: { value: 0 }
     },
     {
-      id: 'xor',
-      type: GATE_TYPES.XOR,
-      position: { x: 300, y: 200 },
-      data: {}
-    },
-    {
       id: 'output',
       type: GATE_TYPES.OUTPUT,
       position: { x: 500, y: 200 },

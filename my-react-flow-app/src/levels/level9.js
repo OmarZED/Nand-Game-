@@ -1,10 +1,10 @@
 import { GATE_TYPES } from './types';
 
-export const level8 = {
-    id: 'level8',
-    title: 'Advanced Logic Circuit Challenge',
-    description: 'Create a complex circuit using NAND, AND, and OR gates. This level requires careful planning and understanding of how different gates can be combined to achieve the desired output. Hint: Try breaking down the problem into smaller sub-circuits.',
-    difficulty: 4,
+export const level9 = {
+    id: 'level9',
+    title: 'Complex Gate Challenge',
+    description: 'Create a circuit that implements a complex logic function using multiple gates. You must connect the gates in the correct order to achieve the desired output.',
+    difficulty: 5,
     availableGates: [
         GATE_TYPES.INPUT,
         GATE_TYPES.OUTPUT,
@@ -28,31 +28,25 @@ export const level8 = {
         {
             id: 'nand1',
             type: GATE_TYPES.NAND,
-            position: { x: 250, y: 150 },
+            position: { x: 300, y: 100 },
             data: { value: null }
         },
         {
             id: 'and1',
             type: GATE_TYPES.AND,
-            position: { x: 400, y: 200 },
-            data: { value: null }
-        },
-        {
-            id: 'nand2',
-            type: GATE_TYPES.NAND,
-            position: { x: 250, y: 350 },
+            position: { x: 500, y: 200 },
             data: { value: null }
         },
         {
             id: 'or1',
             type: GATE_TYPES.OR,
-            position: { x: 400, y: 350 },
+            position: { x: 700, y: 200 },
             data: { value: null }
         },
         {
             id: 'output',
             type: GATE_TYPES.OUTPUT,
-            position: { x: 600, y: 250 },
+            position: { x: 900, y: 200 },
             data: { value: null }
         }
     ],

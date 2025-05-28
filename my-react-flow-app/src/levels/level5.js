@@ -19,12 +19,8 @@ export const level5 = {
       position: { x: 100, y: 300 },
       data: { value: 0 }
     },
-    {
-      id: 'nor',
-      type: GATE_TYPES.NOR,
-      position: { x: 300, y: 200 },
-      data: {}
-    },
+    
+ 
     {
       id: 'output',
       type: GATE_TYPES.OUTPUT,

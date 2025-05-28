@@ -67,21 +67,50 @@ export const useGameLogic = () => {
         );
       }
     } else if (currentLevelId === 'level2') {
-      const hasInput1ToAnd = edges.some(e => e.source === 'input1' && e.target === 'and');
-      const hasInput2ToAnd = edges.some(e => e.source === 'input2' && e.target === 'and');
-      const hasAndToOutput = edges.some(e => e.source === 'and' && e.target === 'output');
-
-      if (hasInput1ToAnd && hasInput2ToAnd && hasAndToOutput) {
-        const input1Value = inputValues['input1'] || 0;
-        const input2Value = inputValues['input2'] || 0;
-        const andOutput = input1Value === 1 && input2Value === 1 ? 1 : 0;
-
+      const inputNodes = nodes.filter(n => n.type === 'input');
+      const andGates = nodes.filter(n => n.type === 'and');
+      const outputNode = nodes.find(n => n.type === 'output');
+    
+      let outputSet = false;
+    
+      for (const andGate of andGates) {
+        const hasAllInputsToAnd = inputNodes.every(input =>
+          edges.some(e => e.source === input.id && e.target === andGate.id)
+        );
+    
+        const hasAndToOutput = edges.some(e =>
+          e.source === andGate.id && e.target === outputNode?.id
+        );
+    
+        if (hasAllInputsToAnd && hasAndToOutput) {
+          // Get input values dynamically from input IDs
+          const inputValuesList = inputNodes.map(n => inputValues[n.id] || 0);
+          const andOutput = inputValuesList.every(v => v === 1) ? 1 : 0;
+    
+          setNodes((nds) =>
+            nds.map((node) => {
+              if (node.id === outputNode.id) {
+                return {
+                  ...node,
+                  data: { value: andOutput }
+                };
+              }
+              return node;
+            })
+          );
+    
+          outputSet = true;
+          break;
+        }
+      }
+    
+      if (!outputSet && outputNode) {
         setNodes((nds) =>
           nds.map((node) => {
-            if (node.id === 'output') {
+            if (node.id === outputNode.id) {
               return {
                 ...node,
-                data: { value: andOutput }
+                data: { value: null }
               };
             }
             return node;
@@ -89,21 +118,50 @@ export const useGameLogic = () => {
         );
       }
     } else if (currentLevelId === 'level3') {
-      const hasInput1ToOr = edges.some(e => e.source === 'input1' && e.target === 'or');
-      const hasInput2ToOr = edges.some(e => e.source === 'input2' && e.target === 'or');
-      const hasOrToOutput = edges.some(e => e.source === 'or' && e.target === 'output');
-
-      if (hasInput1ToOr && hasInput2ToOr && hasOrToOutput) {
-        const input1Value = inputValues['input1'] || 0;
-        const input2Value = inputValues['input2'] || 0;
-        const orOutput = input1Value === 1 || input2Value === 1 ? 1 : 0;
-
+      const inputNodes = nodes.filter(n => n.type === 'input');
+      const orGates = nodes.filter(n => n.type === 'or');
+      const outputNode = nodes.find(n => n.type === 'output');
+    
+      let outputSet = false;
+    
+      for (const orGate of orGates) {
+        const hasAllInputsToOr = inputNodes.every(input =>
+          edges.some(e => e.source === input.id && e.target === orGate.id)
+        );
+    
+        const hasOrToOutput = edges.some(e =>
+          e.source === orGate.id && e.target === outputNode?.id
+        );
+    
+        if (hasAllInputsToOr && hasOrToOutput) {
+          // Calculate OR output from dynamic input values
+          const inputValuesList = inputNodes.map(n => inputValues[n.id] || 0);
+          const orOutput = inputValuesList.some(v => v === 1) ? 1 : 0;
+    
+          setNodes((nds) =>
+            nds.map((node) => {
+              if (node.id === outputNode.id) {
+                return {
+                  ...node,
+                  data: { value: orOutput }
+                };
+              }
+              return node;
+            })
+          );
+    
+          outputSet = true;
+          break;
+        }
+      }
+    
+      if (!outputSet && outputNode) {
         setNodes((nds) =>
           nds.map((node) => {
-            if (node.id === 'output') {
+            if (node.id === outputNode.id) {
               return {
                 ...node,
-                data: { value: orOutput }
+                data: { value: null }
               };
             }
             return node;
@@ -111,22 +169,50 @@ export const useGameLogic = () => {
         );
       }
     } else if (currentLevelId === 'level4') {
-      const hasInput1ToNand = edges.some(e => e.source === 'input1' && e.target === 'nand');
-      const hasInput2ToNand = edges.some(e => e.source === 'input2' && e.target === 'nand');
-      const hasNandToOutput = edges.some(e => e.source === 'nand' && e.target === 'output');
-
-      if (hasInput1ToNand && hasInput2ToNand && hasNandToOutput) {
-        const input1Value = inputValues['input1'] || 0;
-        const input2Value = inputValues['input2'] || 0;
-        // NAND gate output is the inverse of AND gate
-        const nandOutput = (input1Value === 1 && input2Value === 1) ? 0 : 1;
-
+      const inputNodes = nodes.filter(n => n.type === 'input');
+      const nandGates = nodes.filter(n => n.type === 'nand');
+      const outputNode = nodes.find(n => n.type === 'output');
+    
+      let outputSet = false;
+    
+      for (const nandGate of nandGates) {
+        const hasAllInputsToNand = inputNodes.every(input =>
+          edges.some(e => e.source === input.id && e.target === nandGate.id)
+        );
+    
+        const hasNandToOutput = edges.some(e =>
+          e.source === nandGate.id && e.target === outputNode?.id
+        );
+    
+        if (hasAllInputsToNand && hasNandToOutput) {
+          const inputValuesList = inputNodes.map(n => inputValues[n.id] || 0);
+          const andResult = inputValuesList.every(v => v === 1) ? 1 : 0;
+          const nandOutput = andResult === 1 ? 0 : 1;
+    
+          setNodes((nds) =>
+            nds.map((node) => {
+              if (node.id === outputNode.id) {
+                return {
+                  ...node,
+                  data: { value: nandOutput }
+                };
+              }
+              return node;
+            })
+          );
+    
+          outputSet = true;
+          break;
+        }
+      }
+    
+      if (!outputSet && outputNode) {
         setNodes((nds) =>
           nds.map((node) => {
-            if (node.id === 'output') {
+            if (node.id === outputNode.id) {
               return {
                 ...node,
-                data: { value: nandOutput }
+                data: { value: null }
               };
             }
             return node;
@@ -134,22 +220,50 @@ export const useGameLogic = () => {
         );
       }
     } else if (currentLevelId === 'level5') {
-      const hasInput1ToNor = edges.some(e => e.source === 'input1' && e.target === 'nor');
-      const hasInput2ToNor = edges.some(e => e.source === 'input2' && e.target === 'nor');
-      const hasNorToOutput = edges.some(e => e.source === 'nor' && e.target === 'output');
-
-      if (hasInput1ToNor && hasInput2ToNor && hasNorToOutput) {
-        const input1Value = inputValues['input1'] || 0;
-        const input2Value = inputValues['input2'] || 0;
-        // NOR gate output is 1 only when both inputs are 0
-        const norOutput = (input1Value === 0 && input2Value === 0) ? 1 : 0;
-
+      const inputNodes = nodes.filter(n => n.type === 'input');
+      const norGates = nodes.filter(n => n.type === 'nor');
+      const outputNode = nodes.find(n => n.type === 'output');
+    
+      let outputSet = false;
+    
+      for (const norGate of norGates) {
+        const hasAllInputsToNor = inputNodes.every(input =>
+          edges.some(e => e.source === input.id && e.target === norGate.id)
+        );
+    
+        const hasNorToOutput = edges.some(e =>
+          e.source === norGate.id && e.target === outputNode?.id
+        );
+    
+        if (hasAllInputsToNor && hasNorToOutput) {
+          const inputValuesList = inputNodes.map(n => inputValues[n.id] || 0);
+          const orResult = inputValuesList.some(v => v === 1) ? 1 : 0;
+          const norOutput = orResult === 1 ? 0 : 1;
+    
+          setNodes((nds) =>
+            nds.map((node) => {
+              if (node.id === outputNode.id) {
+                return {
+                  ...node,
+                  data: { value: norOutput }
+                };
+              }
+              return node;
+            })
+          );
+    
+          outputSet = true;
+          break;
+        }
+      }
+    
+      if (!outputSet && outputNode) {
         setNodes((nds) =>
           nds.map((node) => {
-            if (node.id === 'output') {
+            if (node.id === outputNode.id) {
               return {
                 ...node,
-                data: { value: norOutput }
+                data: { value: null }
               };
             }
             return node;
@@ -157,22 +271,50 @@ export const useGameLogic = () => {
         );
       }
     } else if (currentLevelId === 'level6') {
-      const hasInput1ToXor = edges.some(e => e.source === 'input1' && e.target === 'xor');
-      const hasInput2ToXor = edges.some(e => e.source === 'input2' && e.target === 'xor');
-      const hasXorToOutput = edges.some(e => e.source === 'xor' && e.target === 'output');
-
-      if (hasInput1ToXor && hasInput2ToXor && hasXorToOutput) {
-        const input1Value = inputValues['input1'] || 0;
-        const input2Value = inputValues['input2'] || 0;
-        // XOR gate output is 1 when inputs are different, 0 when they are the same
-        const xorOutput = input1Value !== input2Value ? 1 : 0;
-
+      const inputNodes = nodes.filter(n => n.type === 'input');
+      const xorGates = nodes.filter(n => n.type === 'xor');
+      const outputNode = nodes.find(n => n.type === 'output');
+    
+      let outputSet = false;
+    
+      for (const xorGate of xorGates) {
+        const hasAllInputsToXor = inputNodes.every(input =>
+          edges.some(e => e.source === input.id && e.target === xorGate.id)
+        );
+    
+        const hasXorToOutput = edges.some(e =>
+          e.source === xorGate.id && e.target === outputNode?.id
+        );
+    
+        if (hasAllInputsToXor && hasXorToOutput) {
+          const input1Value = inputValues['input1'] || 0;
+          const input2Value = inputValues['input2'] || 0;
+          const xorOutput = input1Value !== input2Value ? 1 : 0;
+    
+          setNodes((nds) =>
+            nds.map((node) => {
+              if (node.id === outputNode.id) {
+                return {
+                  ...node,
+                  data: { value: xorOutput }
+                };
+              }
+              return node;
+            })
+          );
+    
+          outputSet = true;
+          break;
+        }
+      }
+    
+      if (!outputSet && outputNode) {
         setNodes((nds) =>
           nds.map((node) => {
-            if (node.id === 'output') {
+            if (node.id === outputNode.id) {
               return {
                 ...node,
-                data: { value: xorOutput }
+                data: { value: null }
               };
             }
             return node;
@@ -180,22 +322,50 @@ export const useGameLogic = () => {
         );
       }
     } else if (currentLevelId === 'level7') {
-      const hasInput1ToXnor = edges.some(e => e.source === 'input1' && e.target === 'xnor');
-      const hasInput2ToXnor = edges.some(e => e.source === 'input2' && e.target === 'xnor');
-      const hasXnorToOutput = edges.some(e => e.source === 'xnor' && e.target === 'output');
-
-      if (hasInput1ToXnor && hasInput2ToXnor && hasXnorToOutput) {
-        const input1Value = inputValues['input1'] || 0;
-        const input2Value = inputValues['input2'] || 0;
-        // XNOR gate output is 1 when inputs are the same, 0 when they are different
-        const xnorOutput = input1Value === input2Value ? 1 : 0;
-
+      const inputNodes = nodes.filter(n => n.type === 'input');
+      const xnorGates = nodes.filter(n => n.type === 'xnor');
+      const outputNode = nodes.find(n => n.type === 'output');
+    
+      let outputSet = false;
+    
+      for (const xnorGate of xnorGates) {
+        const hasAllInputsToXnor = inputNodes.every(input =>
+          edges.some(e => e.source === input.id && e.target === xnorGate.id)
+        );
+    
+        const hasXnorToOutput = edges.some(e =>
+          e.source === xnorGate.id && e.target === outputNode?.id
+        );
+    
+        if (hasAllInputsToXnor && hasXnorToOutput) {
+          const input1Value = inputValues['input1'] || 0;
+          const input2Value = inputValues['input2'] || 0;
+          const xnorOutput = input1Value === input2Value ? 1 : 0;
+    
+          setNodes((nds) =>
+            nds.map((node) => {
+              if (node.id === outputNode.id) {
+                return {
+                  ...node,
+                  data: { value: xnorOutput }
+                };
+              }
+              return node;
+            })
+          );
+    
+          outputSet = true;
+          break;
+        }
+      }
+    
+      if (!outputSet && outputNode) {
         setNodes((nds) =>
           nds.map((node) => {
-            if (node.id === 'output') {
+            if (node.id === outputNode.id) {
               return {
                 ...node,
-                data: { value: xnorOutput }
+                data: { value: null }
               };
             }
             return node;
@@ -242,6 +412,78 @@ export const useGameLogic = () => {
         );
       }
     }
+    else if (currentLevelId === 'level9') {
+      // Level 9 logic
+      const hasInput1ToNand1 = edges.some(e => e.source === 'input1' && e.target === 'nand1');
+      const hasInput2ToNand1 = edges.some(e => e.source === 'input2' && e.target === 'nand1');
+      const hasNand1ToAnd1 = edges.some(e => e.source === 'nand1' && e.target === 'and1');
+      const hasAnd1ToOr1 = edges.some(e => e.source === 'and1' && e.target === 'or1');
+      const hasOr1ToOutput = edges.some(e => e.source === 'or1' && e.target === 'output');
+
+      if (hasInput1ToNand1 && hasInput2ToNand1 && hasNand1ToAnd1 && hasAnd1ToOr1 && hasOr1ToOutput) {
+        const input1Value = inputValues['input1'] || 0;
+        const input2Value = inputValues['input2'] || 0;
+
+        // NAND1 output
+        const nand1Output = !(input1Value && input2Value) ? 1 : 0;
+        // AND1 output
+        const and1Output = nand1Output && input2Value ? 1 : 0;
+        // OR1 output
+        const or1Output = and1Output || input1Value ? 1 : 0;
+
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === 'output') {
+              return {
+                ...node,
+                data: { value: or1Output }
+              };
+            }
+            return node;
+          })
+        );
+      }
+    }
+    // --- Half Adder Logic ---
+    else if (currentLevelId === 'levelHalfAdder') {
+      // Check required connections for half adder
+      const hasInputAToXor1 = edges.some(e => e.source === 'input1' && e.target === 'xor1');
+      const hasInputBToXor1 = edges.some(e => e.source === 'input2' && e.target === 'xor1');
+      const hasInputAToAnd1 = edges.some(e => e.source === 'input1' && e.target === 'and1');
+      const hasInputBToAnd1 = edges.some(e => e.source === 'input2' && e.target === 'and1');
+      const hasXor1ToOutputL = edges.some(e => e.source === 'xor1' && e.target === 'outputL');
+      const hasAnd1ToOutputH = edges.some(e => e.source === 'and1' && e.target === 'outputH');
+
+      if (
+        hasInputAToXor1 && hasInputBToXor1 &&
+        hasInputAToAnd1 && hasInputBToAnd1 &&
+        hasXor1ToOutputL && hasAnd1ToOutputH
+      ) {
+        const inputA = inputValues['input1'] || 0;
+        const inputB = inputValues['input2'] || 0;
+        const sum = inputA ^ inputB; // XOR for sum
+        const carry = inputA & inputB; // AND for carry
+
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === 'outputL') {
+              return {
+                ...node,
+                data: { ...node.data, value: sum }
+              };
+            }
+            if (node.id === 'outputH') {
+              return {
+                ...node,
+                data: { ...node.data, value: carry }
+              };
+            }
+            return node;
+          })
+        );
+      }
+    }
+    
   }, [currentLevelId, edges, inputValues, setNodes]);
 
   useEffect(() => {
@@ -294,4 +536,4 @@ export const useGameLogic = () => {
     toggleInput,
     checkSolution
   };
-}; 
+};

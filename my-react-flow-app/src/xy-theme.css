@@ -1,382 +1,442 @@
+/* Base Styles */
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --border-color: #e5e7eb;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --transition-base: all 0.2s ease-in-out;
+}
+
+/* Base Layout */
 body {
-    margin: 0;
-    overflow: hidden;
-    font-family: sans-serif;
-  }
-  
-  #app {
-    width: 100vw;
-    height: 100vh;
-  }
-  
-  .color-selector-node {
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    border: 2px solid #666;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .color-label {
-    margin: 10px 0;
-    font-size: 14px;
-  }
-  
-  .color-input {
-    width: 100%;
-    margin: 10px 0;
-  }
-  
-  .react-flow__handle {
-    width: 12px;
-    height: 12px;
-    background: #fff;
-    border: 2px solid #666;
-  }
-  
-  .react-flow__handle.connectionindicator {
-    cursor: crosshair;
-  }
-  
-  .nodrag {
-    cursor: pointer;
-  }
-  
-  .input-node, .output-node, .inverter-node {
-    padding: 10px;
-    border: 2px solid #444;
-    border-radius: 5px;
-    background: white;
-    text-align: center;
-    min-width: 80px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .inverter-node {
-    background: #f0f0f0;
-  }
-  
-  .react-flow__handle {
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border: 2px solid #666;
-    border-radius: 50%;
-  }
-  
-  button {
-    margin: 5px;
-    padding: 8px 16px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background: #45a049;
-  }
-  
-  /* New styles for edges and animations */
-  .react-flow__edge-path {
-    stroke-width: 3;
-    transition: stroke 0.3s ease;
-  }
-  
-  .react-flow__edge.animated .react-flow__edge-path {
-    stroke-dasharray: 5;
-    animation: flowAnimation 1s linear infinite;
-  }
-  
-  .react-flow__edge.signal-high .react-flow__edge-path {
-    stroke: #4CAF50;
-    filter: drop-shadow(0 0 3px #4CAF50);
-  }
-  .react-flow__edge.signal-low .react-flow__edge-path {
-    stroke: #f44336; /* Red color for low signal */
-    filter: drop-shadow(0 0 3px #f44336); /* Optional red shadow effect */
-  }
-  
-  @keyframes flowAnimation {
-    from {
-      stroke-dashoffset: 10;
-    }
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-  
-  /* Enhanced node styles */
-  .input-node, .output-node {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-  }
-  
-  .input-node {
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-  }
-  
-  .inverter-node {
-    background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-  }
-  
-  /* Signal indicators */
-  .signal-indicator {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin: 0 5px;
-    transition: all 0.3s ease;
-  }
-  
-  .signal-high .signal-indicator {
-    background: #4CAF50;
-    box-shadow: 0 0 8px #4CAF50;
-  }
-  
-  .signal-low .signal-indicator {
-    background: #f44336;
-    box-shadow: 0 0 8px #f44336;
-  }
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+}
 
-  /* Level Selection Styles */
-  .level-select {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    max-width: 800px;
-    width: 90%;
-  }
+#app {
+  width: 100vw;
+  height: 100vh;
+}
 
-  .level-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-  }
+/* Common Components */
+button {
+  margin: 5px;
+  padding: 8px 16px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition-base);
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+}
 
-  .level-button {
-    background: #f5f5f5;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
 
-  .level-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+/* Node Base Styles */
+.color-selector-node,
+.input-node, 
+.output-node, 
+.inverter-node {
+  padding: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-base);
+}
 
-  .level-button.active {
-    border-color: #4CAF50;
-    background: #e8f5e9;
-  }
+.color-selector-node {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+}
 
-  .level-button h3 {
-    margin: 0 0 0.5rem 0;
-    color: #333;
-  }
+.color-selector-node:hover,
+.input-node:hover, 
+.output-node:hover, 
+.inverter-node:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
 
-  .level-button p {
-    margin: 0 0 1rem 0;
-    color: #666;
-    font-size: 0.9rem;
-  }
+.color-label {
+  margin: 10px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
 
-  .level-difficulty {
-    color: #ff9800;
-    font-size: 0.9rem;
-  }
+.color-input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  transition: var(--transition-base);
+}
 
-  /* Add a semi-transparent overlay when level select is shown */
-  .level-select-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-  }
+.color-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
 
-  .and-gate {
-    width: 60px;
-    height: 60px;
-    background: white;
-    border: 2px solid #444;
-    border-radius: 5px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+/* React Flow Handles */
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: var(--bg-primary);
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  transition: var(--transition-base);
+}
 
-  .and-gate .gate-content {
-    font-weight: bold;
-    font-size: 16px;
-  }
+.react-flow__handle.connectionindicator {
+  cursor: crosshair;
+}
 
-  .and-gate .react-flow__handle {
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border: 2px solid #666;
-  }
+.react-flow__handle:hover {
+  background: var(--primary-color);
+  transform: scale(1.2);
+}
 
-  .and-gate .react-flow__handle:hover {
-    background: #ddd;
-  }
+/* Node Types */
+.input-node {
+  background: linear-gradient(135deg, #e3ffe6 0%, #b2f7c1 100%);
+  border-color: #10b981;
+  box-shadow: 0 0 18px 3px #10b981, 0 2px 8px 0 rgba(16,185,129,0.10);
+  text-align: center;
+  min-width: 100px;
+  transition: var(--transition-base), box-shadow 0.3s cubic-bezier(.4,2,.6,1);
+  position: relative;
+}
 
-  .or-gate {
-    width: 60px;
-    height: 60px;
-    background: white;
-    border: 2px solid #444;
-    border-radius: 5px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.input-node.active {
+  animation: inputPulse 1.2s infinite;
+  border-width: 3px;
+}
 
-  .or-gate .gate-content {
-    font-weight: bold;
-    font-size: 16px;
-  }
+@keyframes inputPulse {
+  0% { box-shadow: 0 0 18px 3px #10b981; }
+  50% { box-shadow: 0 0 32px 10px #34d399; }
+  100% { box-shadow: 0 0 18px 3px #10b981; }
+}
 
-  .or-gate .react-flow__handle {
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border: 2px solid #666;
-  }
+.output-node {
+  background: linear-gradient(135deg, #fffde3 0%, #ffe7b2 100%);
+  border-color: #f59e42;
+  box-shadow: 0 0 18px 3px #f59e42, 0 2px 8px 0 rgba(245,158,66,0.10);
+  text-align: center;
+  min-width: 100px;
+  transition: var(--transition-base), box-shadow 0.3s cubic-bezier(.4,2,.6,1);
+  position: relative;
+}
 
-  .or-gate .react-flow__handle:hover {
-    background: #ddd;
-  }
+.output-node.active {
+  animation: outputPulse 1.2s infinite;
+  border-width: 3px;
+}
 
-  .nand-gate {
-    width: 60px;
-    height: 60px;
-    background: white;
-    border: 2px solid #444;
-    border-radius: 5px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+@keyframes outputPulse {
+  0% { box-shadow: 0 0 18px 3px #f59e42; }
+  50% { box-shadow: 0 0 32px 10px #fbbf24; }
+  100% { box-shadow: 0 0 18px 3px #f59e42; }
+}
+  /* background: linear-gradient(145deg, var(--bg-secondary), var(--bg-primary));
+  text-align: center;
+  min-width: 100px;
+} */
 
-  .nand-gate .gate-content {
-    font-weight: bold;
-    font-size: 16px;
-  }
+.inverter-node {
+  background: linear-gradient(145deg, var(--bg-secondary), var(--bg-primary));
+  text-align: center;
+  min-width: 100px;
+}
 
-  .nand-gate .react-flow__handle {
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border: 2px solid #666;
-  }
+/* Edge Styles */
+.react-flow__edge-path {
+  stroke-width: 2;
+  transition: var(--transition-base);
+}
 
-  .nand-gate .react-flow__handle:hover {
-    background: #ddd;
-  }
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke-dasharray: 5;
+  animation: flowAnimation 1s linear infinite;
+}
 
-  .nor-gate {
-    width: 60px;
-    height: 60px;
-    background: white;
-    border: 2px solid #444;
-    border-radius: 5px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.react-flow__edge.signal-high .react-flow__edge-path {
+  stroke: var(--success-color);
+  filter: drop-shadow(0 0 3px var(--success-color));
+}
 
-  .nor-gate .gate-content {
-    font-weight: bold;
-    font-size: 16px;
-  }
+.react-flow__edge.signal-low .react-flow__edge-path {
+  stroke: var(--error-color);
+  filter: drop-shadow(0 0 3px var(--error-color));
+}
 
-  .nor-gate .react-flow__handle {
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border: 2px solid #666;
-  }
+/* Signal Indicators */
+.signal-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin: 0 5px;
+  transition: var(--transition-base);
+}
 
-  .nor-gate .react-flow__handle:hover {
-    background: #ddd;
-  }
+.signal-high .signal-indicator {
+  background: var(--success-color);
+  box-shadow: 0 0 8px var(--success-color);
+}
 
-  .xor-gate {
-    width: 60px;
-    height: 60px;
-    background: white;
-    border: 2px solid #444;
-    border-radius: 5px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.signal-low .signal-indicator {
+  background: var(--error-color);
+  box-shadow: 0 0 8px var(--error-color);
+}
 
-  .xor-gate .gate-content {
-    font-weight: bold;
-    font-size: 16px;
-  }
+/* Level Selection */
+.level-select {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg-primary);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  max-width: 800px;
+  width: 90%;
+  border: 1px solid var(--border-color);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
 
-  .xor-gate .react-flow__handle {
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border: 2px solid #666;
-  }
+.level-select-header {
+  margin-bottom: 1.5rem;
+}
 
-  .xor-gate .react-flow__handle:hover {
-    background: #ddd;
-  }
+.level-select-header h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
 
-  .xnor-gate {
-    width: 60px;
-    height: 60px;
-    background: white;
-    border: 2px solid #444;
-    border-radius: 5px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  overflow-y: auto;
+  max-height: 70vh;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
 
-  .xnor-gate .gate-content {
-    font-weight: bold;
-    font-size: 16px;
-  }
+.level-button {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
 
-  .xnor-gate .react-flow__handle {
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border: 2px solid #666;
-  }
+.level-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-color);
+}
 
-  .xnor-gate .react-flow__handle:hover {
-    background: #ddd;
+.level-button.active {
+  border-color: var(--primary-color);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.level-button h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.level-button p {
+  margin: 0 0 1rem 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.level-difficulty {
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Logic Gates */
+.and-gate, .or-gate, .nand-gate, .nor-gate, .xor-gate, .xnor-gate {
+  width: 70px;
+  height: 70px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px 2px rgba(37,99,235,0.10), 0 2px 8px 0 rgba(0,0,0,0.08);
+  transition: var(--transition-base), box-shadow 0.3s cubic-bezier(.4,2,.6,1);
+  overflow: visible;
+}
+
+.and-gate {
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  border-color: #00bcd4;
+  box-shadow: 0 0 16px 2px #00bcd4, 0 2px 8px 0 rgba(0,0,0,0.08);
+}
+
+.or-gate {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border-color: #ff9800;
+  box-shadow: 0 0 16px 2px #ff9800, 0 2px 8px 0 rgba(0,0,0,0.08);
+}
+
+.nand-gate {
+  background: linear-gradient(135deg, #f3e5f5 0%, #ce93d8 100%);
+  border-color: #9c27b0;
+  box-shadow: 0 0 16px 2px #9c27b0, 0 2px 8px 0 rgba(0,0,0,0.08);
+}
+
+.nor-gate {
+  background: linear-gradient(135deg, #fbe9e7 0%, #ffccbc 100%);
+  border-color: #ff5722;
+  box-shadow: 0 0 16px 2px #ff5722, 0 2px 8px 0 rgba(0,0,0,0.08);
+}
+
+.xor-gate {
+  background: linear-gradient(135deg, #e8eaf6 0%, #b3c2f2 100%);
+  border-color: #3f51b5;
+  box-shadow: 0 0 16px 2px #3f51b5, 0 2px 8px 0 rgba(0,0,0,0.08);
+}
+
+.xnor-gate {
+  background: linear-gradient(135deg, #f1f8e9 0%, #c5e1a5 100%);
+  border-color: #8bc34a;
+  box-shadow: 0 0 16px 2px #8bc34a, 0 2px 8px 0 rgba(0,0,0,0.08);
+}
+
+.and-gate:hover, .or-gate:hover, .nand-gate:hover, .nor-gate:hover, .xor-gate:hover, .xnor-gate:hover {
+  transform: scale(1.07) rotate(-2deg);
+  box-shadow: 0 0 32px 6px var(--primary-color), 0 4px 16px 0 rgba(0,0,0,0.12);
+  border-color: var(--primary-color);
+  z-index: 2;
+}
+
+.and-gate .gate-content,
+.or-gate .gate-content,
+.nand-gate .gate-content,
+.nor-gate .gate-content,
+.xor-gate .gate-content,
+.xnor-gate .gate-content {
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--text-primary);
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(37,99,235,0.18), 0 2px 4px rgba(0,0,0,0.08);
+  transition: color 0.2s, text-shadow 0.2s;
+  user-select: none;
+}
+
+@keyframes gatePulse {
+  0% { box-shadow: 0 0 16px 2px var(--primary-color); }
+  50% { box-shadow: 0 0 32px 8px var(--primary-hover); }
+  100% { box-shadow: 0 0 16px 2px var(--primary-color); }
+}
+
+.and-gate.active, .or-gate.active, .nand-gate.active, .nor-gate.active, .xor-gate.active, .xnor-gate.active {
+  animation: gatePulse 1.2s infinite;
+  border-width: 3px;
+}
+
+/* Animations */
+@keyframes flowAnimation {
+  from {
+    stroke-dashoffset: 10;
   }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Utility Classes */
+.nodrag {
+  cursor: pointer;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+.game-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 300px;
+  padding: 20px;
+  background: #f5f5f5;
+  overflow-y: auto;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.truth-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.truth-table th, .truth-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.truth-table th {
+  background-color: #2196F3;
+  color: white;
+}
+
+.truth-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}

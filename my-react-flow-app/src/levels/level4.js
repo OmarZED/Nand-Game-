@@ -20,12 +20,6 @@ export const level4 = {
       data: { value: 0 }
     },
     {
-      id: 'nand',
-      type: GATE_TYPES.NAND,
-      position: { x: 300, y: 200 },
-      data: {}
-    },
-    {
       id: 'output',
       type: GATE_TYPES.OUTPUT,
       position: { x: 500, y: 200 },

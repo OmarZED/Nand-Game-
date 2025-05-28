@@ -20,12 +20,6 @@ export const level7 = {
       data: { value: 0 }
     },
     {
-      id: 'xnor',
-      type: GATE_TYPES.XNOR,
-      position: { x: 300, y: 200 },
-      data: {}
-    },
-    {
       id: 'output',
       type: GATE_TYPES.OUTPUT,
       position: { x: 500, y: 200 },

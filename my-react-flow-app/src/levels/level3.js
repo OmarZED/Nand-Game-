@@ -20,12 +20,6 @@ export const level3 = {
       position: { x: 100, y: 200 },
     },
     {
-      id: 'or',
-      type: GATE_TYPES.OR,
-      data: {},
-      position: { x: 300, y: 150 },
-    },
-    {
       id: 'output',
       type: GATE_TYPES.OUTPUT,
       data: { value: null },

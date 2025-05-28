@@ -26,6 +26,7 @@ export const level1 = {
       position: { x: 500, y: 100 },
     },
   ],
+
   expectedTruthTable: [
     { input: 0, output: 1 },
     { input: 1, output: 0 },

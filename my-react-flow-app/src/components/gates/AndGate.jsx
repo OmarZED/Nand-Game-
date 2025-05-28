@@ -1,8 +1,8 @@
 import { Handle, Position } from '@xyflow/react';
 
-const AndGate = () => {
+const AndGate = ({ preview }) => {
   return (
-    <div className="and-gate">
+    <div className={`and-gate ${preview ? 'preview-mode' : ''}`}>
       <Handle
         type="target"
         position={Position.Left}
@@ -25,4 +25,4 @@ const AndGate = () => {
   );
 };
 
-export default AndGate; 
+export default AndGate;

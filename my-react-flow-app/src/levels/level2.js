@@ -19,12 +19,7 @@ export const level2 = {
       data: { value: 0 },
       position: { x: 100, y: 200 },
     },
-    {
-      id: 'and',
-      type: GATE_TYPES.AND,
-      data: {},
-      position: { x: 300, y: 150 },
-    },
+ 
     {
       id: 'output',
       type: GATE_TYPES.OUTPUT,
@@ -32,6 +27,7 @@ export const level2 = {
       position: { x: 500, y: 150 },
     },
   ],
+  
   expectedTruthTable: [
     { input1: 0, input2: 0, output: 0 },
     { input1: 0, input2: 1, output: 0 },
