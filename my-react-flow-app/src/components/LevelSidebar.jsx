@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { logoutUser } from '../firebase';
+import { useNavigate } from 'react-router-dom';
 
 const gateTypes = ['AND', 'OR', 'NOT', 'NAND', 'NOR', 'XOR', 'XNOR'];
 
 const LevelSidebar = ({ title, description, completedLevels }) => {
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
+  const navigate = useNavigate();
 
   const onDragStart = useCallback((event, gateType) => {
     event.dataTransfer.setData('application/reactflow', gateType.toLowerCase());
@@ -60,20 +62,39 @@ const LevelSidebar = ({ title, description, completedLevels }) => {
             Completed: {completedLevels.length} levels
           </p>
         </div>
-        <button
-          onClick={handleLogout}
-          style={{
-            padding: '6px 12px',
-            backgroundColor: '#dc3545',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '0.9rem'
-          }}
-        >
-          Logout
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          {userRole === 'teacher' && (
+            <button
+              onClick={() => navigate('/teacher')}
+              style={{
+                padding: '6px 12px',
+                backgroundColor: '#2196F3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                marginBottom: '5px'
+              }}
+            >
+              Teacher Dashboard
+            </button>
+          )}
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.9rem'
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
       {/* Level Info */}

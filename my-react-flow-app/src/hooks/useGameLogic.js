@@ -31,6 +31,7 @@ export const useGameLogic = () => {
     showLevelSelect: levelManager.showLevelSelect,
     setShowLevelSelect: levelManager.setShowLevelSelect,
     handleLevelSelect: levelManager.handleLevelSelect,
+    allLevels: levelManager.allLevels,
     
     // Circuit state and actions
     nodes: circuitManager.nodes,

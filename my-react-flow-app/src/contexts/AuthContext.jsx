@@ -17,33 +17,39 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userProgress, setUserProgress] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const db = getFirestore();
 
-  // Load user progress from Firestore
-  const loadUserProgress = async (userId) => {
+  // Load user data including role
+  const loadUserData = async (userId) => {
     try {
       const userDoc = await getDoc(doc(db, 'users', userId));
       if (userDoc.exists()) {
-        setUserProgress(userDoc.data().progress || {});
+        const userData = userDoc.data();
+        setUserProgress(userData.progress || {});
+        setUserRole(userData.role || 'student');
       } else {
-        // Initialize progress for new users
-        const initialProgress = {
-          currentLevel: 'level1',
-          completedLevels: [],
-          lastPlayed: new Date().toISOString()
+        // Initialize new user data
+        const initialData = {
+          progress: {
+            currentLevel: 'level1',
+            completedLevels: [],
+            lastPlayed: new Date().toISOString()
+          },
+          role: 'student' // Default role is student
         };
-        await setDoc(doc(db, 'users', userId), { progress: initialProgress });
-        setUserProgress(initialProgress);
+        await setDoc(doc(db, 'users', userId), initialData);
+        setUserProgress(initialData.progress);
+        setUserRole(initialData.role);
       }
     } catch (error) {
-      console.error('Error loading user progress:', error);
-      // Don't set error state for Firestore errors, just log them
-      // This prevents the app from showing error state for non-critical issues
+      console.error('Error loading user data:', error);
       setUserProgress({
         currentLevel: 'level1',
         completedLevels: [],
         lastPlayed: new Date().toISOString()
       });
+      setUserRole('student');
     }
   };
 
@@ -57,16 +63,32 @@ export const AuthProvider = ({ children }) => {
         ...newProgress,
         lastPlayed: new Date().toISOString()
       };
-      await setDoc(doc(db, 'users', user.uid), { progress: updatedProgress });
+      await setDoc(doc(db, 'users', user.uid), { 
+        progress: updatedProgress,
+        role: userRole 
+      });
       setUserProgress(updatedProgress);
     } catch (error) {
       console.error('Error updating progress:', error);
-      // Update local state even if Firestore update fails
       setUserProgress(prev => ({
         ...prev,
         ...newProgress,
         lastPlayed: new Date().toISOString()
       }));
+    }
+  };
+
+  // Update user role (admin only)
+  const updateUserRole = async (userId, newRole) => {
+    if (!user || userRole !== 'admin') return;
+    
+    try {
+      await setDoc(doc(db, 'users', userId), { role: newRole }, { merge: true });
+      if (userId === user.uid) {
+        setUserRole(newRole);
+      }
+    } catch (error) {
+      console.error('Error updating user role:', error);
     }
   };
 
@@ -76,9 +98,10 @@ export const AuthProvider = ({ children }) => {
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
         setUser(user);
         if (user) {
-          await loadUserProgress(user.uid);
+          await loadUserData(user.uid);
         } else {
           setUserProgress(null);
+          setUserRole(null);
         }
         setLoading(false);
       }, (error) => {
@@ -100,7 +123,9 @@ export const AuthProvider = ({ children }) => {
     loading,
     error,
     userProgress,
-    updateProgress
+    userRole,
+    updateProgress,
+    updateUserRole
   };
 
   if (loading) {

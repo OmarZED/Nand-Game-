@@ -1,6 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { ReactFlow, Controls, Background } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 // Gate Components
 import InputNode from './components/gates/InputNode';
@@ -19,15 +23,10 @@ import LevelSelectOverlay from './components/ui/LevelSelectOverlay';
 import GameControls from './components/GameControls';
 import FeedbackMessage from './components/FeedbackMessage';
 import LoginForm from './components/auth/LoginForm';
+import TeacherDashboard from './components/teacher/TeacherDashboard';
 
 // Hooks and Data
 import { useGameLogic } from './hooks/useGameLogic';
-import { levels } from './levels';
-
-// Context
-import { DnDProvider } from './contexts/DnDContext';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { AuthGuard } from './components/AuthGuard';
 
 // Define node types for React Flow
 const nodeTypes = {
@@ -56,9 +55,10 @@ const InverterGame = () => {
     handleLevelSelect,
     toggleInput,
     checkSolution,
+    allLevels
   } = useGameLogic();
 
-  const { updateProgress, userProgress } = useAuth();
+  const { updateProgress, userProgress, userRole } = useAuth();
   const [feedback, setFeedback] = useState(null);
 
   // Handle check button
@@ -73,9 +73,9 @@ const InverterGame = () => {
         completedLevels.push(currentLevelId);
       }
       
-      // Find next level
-      const currentIndex = levels.findIndex(level => level.id === currentLevelId);
-      const nextLevel = levels[currentIndex + 1];
+      // Find next level using allLevels instead of levels
+      const currentIndex = allLevels.findIndex(level => level.id === currentLevelId);
+      const nextLevel = allLevels[currentIndex + 1];
       
       await updateProgress({
         completedLevels,
@@ -161,7 +161,7 @@ const InverterGame = () => {
         <LevelSelectOverlay
           showLevelSelect={showLevelSelect}
           setShowLevelSelect={setShowLevelSelect}
-          levels={levels}
+          levels={allLevels}
           currentLevelId={currentLevelId}
           onSelectLevel={handleLevelSelect}
           completedLevels={userProgress?.completedLevels || []}
@@ -172,49 +172,43 @@ const InverterGame = () => {
 };
 
 const AppContent = () => {
-  const { user, loading, error } = useAuth();
+  const { user, loading, userRole } = useAuth();
 
   if (loading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontSize: '1.2rem'
-      }}>
-        Loading...
-      </div>
-    );
+    return <div>Loading...</div>;
   }
 
-  if (error) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        color: 'red',
-        fontSize: '1.2rem'
-      }}>
-        Error: {error.message}
-      </div>
-    );
+  if (!user) {
+    return <LoginForm />;
   }
 
-  return user ? <InverterGame /> : <LoginForm />;
+  return (
+    <Routes>
+      <Route 
+        path="/teacher" 
+        element={
+          userRole === 'teacher' ? (
+            <TeacherDashboard />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } 
+      />
+      <Route path="/" element={<InverterGame />} />
+    </Routes>
+  );
 };
 
-// Wrap everything in DnDProvider and AuthProvider
-export default function App() {
+const App = () => {
   return (
-    <AuthProvider>
-      <DnDProvider>
-        <AuthGuard>
-          <InverterGame />
-        </AuthGuard>
-      </DnDProvider>
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <DndProvider backend={HTML5Backend}>
+          <AppContent />
+        </DndProvider>
+      </AuthProvider>
+    </Router>
   );
-}
+};
+
+export default App;
